@@ -23,9 +23,9 @@ def parsePage():
 
 
 
-def notify(shoe):
+def notify():
     yag = yagmail.SMTP()
-    contents = [' found you a cheap shoe']
+    contents = ['found you a cheap shoe, here is the link' BASE_URL ]
     yag.send('mingeling@gmail.com', 'new balance found', contents)
 
 
