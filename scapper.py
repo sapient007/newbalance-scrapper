@@ -9,6 +9,7 @@ MODEL = '860'
 SIZE = '9.5'
 WIDTH = 'W'
 TARGET_PRICE = '50'
+EMAIL = ''
 
 # specify the url
 BASE_URL= ''
@@ -22,11 +23,8 @@ def parsePage():
     #check to see if shoes are below the target price <to be implemented>
 
 
-
 def notify():
     yag = yagmail.SMTP()
     contents = ['found you a cheap shoe, here is the link' BASE_URL ]
-    yag.send('mingeling@gmail.com', 'new balance found', contents)
-
-
+    yag.send(EMAIL, 'new balance found', contents)
 
