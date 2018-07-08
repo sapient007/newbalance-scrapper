@@ -15,12 +15,15 @@ EMAIL = ''
 BASE_URL= ''
 
 def generateBaseURL():
-    BASE_URL = 'https://www.joesnewbalanceoutlet.com/products/?Filters%5BSize%5D=9.5&Filters%5BWidth%5D=W&PriceRange=&OnSale=&Icon=&Brand=0&PageSize=24&Page=1&Branded=False&ListType=Grid&Text=860&Sorting=Newest'
+    BASE_URL = 'https://www.joesnewbalanceoutlet.com/men/shoes/running/?Filters%5BSize%5D=9.5&Filters%5BWidth%5D=2E&Categories=men&Categories=shoes&Categories=running&PriceRange=&OnSale=&Icon=&Brand=0&PageSize=24&Page=1&Branded=False&ListType=Grid&Text=1080&Sorting=LowestPrice'
 
 def parse_page_for_price(quote_page):
     page = urllib2.urlopen(quote_page)
     soup = BeautifulSoul(page, 'html.parser')
-    #check to see if shoes are below the target price <to be implemented>
+    #scape the screen and find the lowest price posted
+    price_div = soup.find('div', attrs={'class': 'productPrice'})
+    price = price_div.text.strip()
+    print price
     return price
 
 
