@@ -1,0 +1,15 @@
+---
+applications:
+- name: myapp
+  memory: 128MB
+  disk_quota: 256MB
+  no-route: true
+  command: python scrapper.py
+  env:
+    MODEL: <CHANGE_ME> #model 
+    SIZE: <CHANGE_ME> #size of the shoe
+    WIDTH: <CHANGE_ME> #width of shoe
+    TARGET_PRICE: <CHANGE_ME> #targt price
+    EMAIL: <CHANGE_ME> #email to alert
+    SMTP_USER: <CHANGE_ME> #gmail smtp user account
+    SMTP_PASS: <CHANGE_ME> #gmail smtp user pass
