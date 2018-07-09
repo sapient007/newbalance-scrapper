@@ -4,6 +4,7 @@ applications:
   memory: 128MB
   disk_quota: 256MB
   no-route: true
+  buildpack: python_buildpack
   command: python scrapper.py
   env:
     MODEL: <CHANGE_ME> #model 
