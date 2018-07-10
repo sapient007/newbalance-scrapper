@@ -64,6 +64,9 @@ def send_to_slack(price):
         print("EXCEPTION: " + str(em))
     
 def main():
+    #initalize application
+    send_to_slack("search started for $" + str(TARGET_PRICE) + " for " + MODEL + "/" + SIZE + "/" + WIDTH)
+
     while True:
         try:
             # Check the page
