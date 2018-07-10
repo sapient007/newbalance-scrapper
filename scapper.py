@@ -35,7 +35,7 @@ def parse_page_for_price(quote_page):
     if price_div is not None:
         price = price_div.text.strip().replace("$", "")
     else:
-        print("no results found" + )
+        print("no results found")
         return
     
     print(price)
