@@ -43,13 +43,15 @@ def parse_page_for_price(quote_page):
     print(price)
     return float(price)
 
-
+#email alerts
+# TODO: not fully implemented
 def notify_me():
     yag = yagmail.SMTP()
     contents = ['found you a cheap shoe, here is the link' + BASE_URL ]
     yag.send(EMAIL, 'new balance found', contents)
 
 
+#send a message to slack 
 def send_to_slack(price):
     post = {"text": "{0}".format(price)}
     try:
