@@ -62,8 +62,8 @@ def main():
             if price is not None:
                 # Check the page
                 if price < TARGET_PRICE:
-                    print("sending mail")
-                    notify_me()
+                    print("Price Mark Found at " + str(price) + " with URL " + BASE_URL)
+                    #notify_me()
             time.sleep(SLEEP_SEC)
         except KeyboardInterrupt:
             break
