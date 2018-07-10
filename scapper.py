@@ -9,9 +9,6 @@ import sys
 
 #start time
 time_start = time.time()
-seconds = 0
-minutes = 0
-SLEEP_SEC=43200 #12 hours
 
 #Slack Channel Webhook
 SLACK_WEBHOOK = "https://hooks.slack.com/services/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"
@@ -21,6 +18,7 @@ MODEL = os.getenv("MODEL", '860')
 SIZE = os.getenv("SIZE", '9.5')
 WIDTH = os.getenv("WIDTH", '2E')
 TARGET_PRICE = os.getenv("PRICE", 60)
+SLEEP_SEC = os.getenv("PRICE", 43200) #default to sleep for 12 hours
 EMAIL = os.getenv("EMAIL", 'sapient007@hotmail.com')
 SMTP_USER = os.getenv("SMTP_USER") #no defaults are set for this 
 SMTP_PASS = os.getenv("SMTP_PASS") #no defaults are set for this 
