@@ -65,7 +65,7 @@ def send_to_slack(price):
     
 def main():
     #initalize application
-    send_to_slack("search started for" + MODEL + "/" + SIZE + "/" + WIDTH + " @ $" + str(TARGET_PRICE))
+    send_to_slack("search started for " + MODEL + "/" + SIZE + "/" + WIDTH + " @ $" + str(TARGET_PRICE))
 
     while True:
         try:
