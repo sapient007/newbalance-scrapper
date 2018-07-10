@@ -6,7 +6,7 @@ import json
 import yagmail
 
 #define some deafult paramerters
-MODEL = os.getenv("MODEL", '1080')
+MODEL = os.getenv("MODEL", '860')
 SIZE = os.getenv("SIZE", '9.5')
 WIDTH = os.getenv("WIDTH", '2E')
 TARGET_PRICE = os.getenv("PRICE", 50)
