@@ -11,7 +11,7 @@ import sys
 time_start = time.time()
 seconds = 0
 minutes = 0
-SLEEP_SEC=14400
+SLEEP_SEC=43200 #12 hours
 
 #Slack Channel Webhook
 SLACK_WEBHOOK = "https://hooks.slack.com/services/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"
@@ -65,7 +65,7 @@ def send_to_slack(price):
     
 def main():
     #initalize application
-    send_to_slack("search started for $" + str(TARGET_PRICE) + " for " + MODEL + "/" + SIZE + "/" + WIDTH)
+    send_to_slack("search started for" + MODEL + "/" + SIZE + "/" + WIDTH + " @ $" + str(TARGET_PRICE))
 
     while True:
         try:
