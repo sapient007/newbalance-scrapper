@@ -4,6 +4,14 @@ from bs4 import BeautifulSoup
 import os
 import json
 import yagmail
+import time
+import sys
+
+#start time
+time_start = time.time()
+seconds = 0
+minutes = 0
+SLEEP_SEC=14400
 
 #define some deafult paramerters
 MODEL = os.getenv("MODEL", '860')
@@ -27,6 +35,7 @@ def parse_page_for_price(quote_page):
     if price_div is not None:
         price = price_div.text.strip().replace("$", "")
     else:
+        print("no results found" + )
         return
     
     print(price)
@@ -45,13 +54,19 @@ def schedule():
 
 
 def main():
-    # Check the page
-    price = parse_page_for_price(BASE_URL)
-    if price is not None:
-        # Check the page
-        if price < TARGET_PRICE:
-            print("sending mail")
-            notify_me()
+
+    while True:
+        try:
+            # Check the page
+            price = parse_page_for_price(BASE_URL)
+            if price is not None:
+                # Check the page
+                if price < TARGET_PRICE:
+                    print("sending mail")
+                    notify_me()
+            time.sleep(SLEEP_SEC)
+        except KeyboardInterrupt:
+            break
 
 if __name__ == "__main__":
     # TODO: Run scheduler once a day
