@@ -13,11 +13,14 @@ seconds = 0
 minutes = 0
 SLEEP_SEC=14400
 
+#Slack Channel Webhook
+SLACK_WEBHOOK = "https://hooks.slack.com/services/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"
+
 #define some deafult paramerters
 MODEL = os.getenv("MODEL", '860')
 SIZE = os.getenv("SIZE", '9.5')
 WIDTH = os.getenv("WIDTH", '2E')
-TARGET_PRICE = os.getenv("PRICE", 50)
+TARGET_PRICE = os.getenv("PRICE", 60)
 EMAIL = os.getenv("EMAIL", 'sapient007@hotmail.com')
 SMTP_USER = os.getenv("SMTP_USER") #no defaults are set for this 
 SMTP_PASS = os.getenv("SMTP_PASS") #no defaults are set for this 
@@ -35,7 +38,6 @@ def parse_page_for_price(quote_page):
     if price_div is not None:
         price = price_div.text.strip().replace("$", "")
     else:
-        print("no results found")
         return
     
     print(price)
@@ -48,13 +50,18 @@ def notify_me():
     yag.send(EMAIL, 'new balance found', contents)
 
 
-def schedule():
-    # TODO: to implement a scheduler assocaited with this 
-    pass
-
-
+def send_to_slack(price):
+    post = {"text": "{0}".format(price)}
+    try:
+        json_data = json.dumps(post)
+        req = request.Request(SLACK_WEBHOOK,
+                              data=json_data.encode('ascii'),
+                              headers={'Content-Type': 'application/json'}) 
+        resp = request.urlopen(req)
+    except Exception as em:
+        print("EXCEPTION: " + str(em))
+    
 def main():
-
     while True:
         try:
             # Check the page
@@ -62,9 +69,11 @@ def main():
             if price is not None:
                 # Check the page
                 if price < TARGET_PRICE:
-                    print("Price Mark Found at " + str(price) + " with URL " + BASE_URL)
-                    #notify_me()
+                    send_to_slack("Price Mark Found at " + str(price) + " with URL " + BASE_URL)
+            else:
+                send_to_slack("nothing found")
             time.sleep(SLEEP_SEC)
+            
         except KeyboardInterrupt:
             break
 
