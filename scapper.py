@@ -72,7 +72,7 @@ def main():
             if price is not None:
                 # Check the page
                 if price < TARGET_PRICE:
-                    send_to_slack("Price Mark Found at " + str(price) + " with URL " + BASE_URL)
+                    send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
             else:
                 send_to_slack("nothing found")
             time.sleep(SLEEP_SEC)
