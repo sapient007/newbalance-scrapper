@@ -6,6 +6,12 @@ import json
 import yagmail
 import time
 import sys
+import datetime
+import logging
+import sys
+
+#log to sysout 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 #start time
 time_start = time.time()
@@ -75,6 +81,7 @@ def main():
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
             else:
                 send_to_slack("nothing found")
+            logging.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             time.sleep(SLEEP_SEC)
             
         except KeyboardInterrupt:
