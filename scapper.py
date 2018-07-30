@@ -81,6 +81,7 @@ def main():
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
             else:
                 send_to_slack("nothing found")
+                logging.info(price)
             logging.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             time.sleep(SLEEP_SEC)
             
