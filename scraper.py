@@ -82,8 +82,14 @@ def main():
             else:
                 send_to_slack("nothing found")
                 logging.info(price)
+            
             logging.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
-            time.sleep(SLEEP_SEC)
+            
+            slept = 0 
+            while (slept < SLEEP_SEC):
+                logging.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
+                slept += 1800
+                time.sleep(1800)
             
         except KeyboardInterrupt:
             break
