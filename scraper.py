@@ -44,7 +44,7 @@ def parse_page_for_price(quote_page):
     else:
         return
     
-    print(price)
+    #print(price)
     return float(price)
 
 #email alerts
@@ -77,19 +77,20 @@ def main():
             price = parse_page_for_price(BASE_URL)
             if price is not None:
                 # Check the page
+                logging.info("lowest price is " + str(price) )
                 if price < TARGET_PRICE:
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
             else:
                 send_to_slack("nothing found")
-                logging.info(price)
+                logging.info("nothing found" )
             
             logging.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             
             slept = 0 
             while (slept < SLEEP_SEC):
                 logging.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
-                slept += 1800
-                time.sleep(1800)
+                slept += 18
+                time.sleep(18)
             
         except KeyboardInterrupt:
             break
