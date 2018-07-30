@@ -5,7 +5,7 @@ applications:
   disk_quota: 256MB
   no-route: true
   buildpack: python_buildpack
-  command: python scrapper.py
+  command: #app start command here 
   env:
     MODEL: <CHANGE_ME> #model 
     SIZE: <CHANGE_ME> #size of the shoe
