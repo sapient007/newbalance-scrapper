@@ -7,11 +7,31 @@ import yagmail
 import time
 import sys
 import datetime
-import logging
 import sys
+import logging
+import socket
+from logging.handlers import SysLogHandler
+
+class ContextFilter(logging.Filter):
+    hostname = socket.gethostname()
+
+    def filter(self, record):
+        record.hostname = ContextFilter.hostname
+        return True
+
+syslog = SysLogHandler(address=('logs.papertrailapp.com', 15542))
+syslog.addFilter(ContextFilter())
+
+format = '%(asctime)s %(hostname)s NB_Scraper: %(message)s'
+formatter = logging.Formatter(format, datefmt='%b %d %H:%M:%S')
+syslog.setFormatter(formatter)
+
+logger = logging.getLogger()
+logger.addHandler(syslog)
+logger.setLevel(logging.INFO)
 
 #log to sysout 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+#logger.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 #start time
 time_start = time.time()
@@ -69,6 +89,7 @@ def send_to_slack(price):
     
 def main():
     #initalize application
+    logger.info("search started for " + MODEL + "/" + SIZE + "/" + WIDTH + " @ $" + str(TARGET_PRICE) + " with URL " + BASE_URL)
     send_to_slack("search started for " + MODEL + "/" + SIZE + "/" + WIDTH + " @ $" + str(TARGET_PRICE) + " with URL " + BASE_URL)
 
     while True:
@@ -77,20 +98,22 @@ def main():
             price = parse_page_for_price(BASE_URL)
             if price is not None:
                 # Check the page
-                logging.info("lowest price is " + str(price) )
+                logger.info("lowest price is " + str(price) )
                 if price < TARGET_PRICE:
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
             else:
                 send_to_slack("nothing found")
-                logging.info("nothing found" )
+                logger.info("nothing found" )
             
-            logging.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
+            logger.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             
             slept = 0 
+            logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
+
             while (slept < SLEEP_SEC):
-                logging.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
-                slept += 18
-                time.sleep(18)
+                slept += 1800
+                time.sleep(1800)
+                logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
             
         except KeyboardInterrupt:
             break
