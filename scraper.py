@@ -12,13 +12,6 @@ import logging
 import socket
 from logging.handlers import SysLogHandler
 
-class ContextFilter(logging.Filter):
-    hostname = socket.gethostname()
-
-    def filter(self, record):
-        record.hostname = ContextFilter.hostname
-        return True
-
 #define some deafult paramerters
 MODEL = os.getenv("MODEL", '860')
 SIZE = os.getenv("SIZE", '9.5')
@@ -31,7 +24,17 @@ SMTP_PASS = os.getenv("SMTP_PASS") #no defaults are set for this
 PAPER_TRAIL_EVENT = os.getenv("PAPER_TRAIL_EVENT", 11111)
 SLACK_WEBHOOK = os.getenv("SLACK_WEBHOOK", "https://hooks.slack.com/services/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")
 
-syslog = SysLogHandler(address=('logs.papertrailapp.com', PAPER_TRAIL_EVENT))
+
+print(PAPER_TRAIL_EVENT)
+
+class ContextFilter(logging.Filter):
+    hostname = socket.gethostname()
+
+    def filter(self, record):
+        record.hostname = ContextFilter.hostname
+        return True
+
+syslog = SysLogHandler(address=('logs.papertrailapp.com', int(PAPER_TRAIL_EVENT)))
 syslog.addFilter(ContextFilter())
 
 format = '%(asctime)s %(hostname)s NB_Scraper: %(message)s'
@@ -97,16 +100,15 @@ def main():
             price = parse_page_for_price(BASE_URL)
             if price is not None:
                 # Check the page
-                logger.info("lowest price is " + str(price) )
-                if price < TARGET_PRICE:
+                if price <= TARGET_PRICE:
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
-                #price is > than target
+                    #price is > than target
                 else:
-                    logger.info("something found. lowest price > target " + str(price) )
+                    logger.info("lowest price > target " + str(price) )
                     send_to_slack("price at " + str(price)) 
             else:
                 logger.info("nothing found. lowest price is " + str(price) )
-                send_to_slack("nothing found")
+                #send_to_slack("nothing found")
             
             logger.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             
