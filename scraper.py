@@ -25,8 +25,6 @@ PAPER_TRAIL_EVENT = os.getenv("PAPER_TRAIL_EVENT", 11111)
 SLACK_WEBHOOK = os.getenv("SLACK_WEBHOOK", "https://hooks.slack.com/services/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")
 
 
-print(PAPER_TRAIL_EVENT)
-
 class ContextFilter(logging.Filter):
     hostname = socket.gethostname()
 
