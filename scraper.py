@@ -43,9 +43,6 @@ logger = logging.getLogger()
 logger.addHandler(syslog)
 logger.setLevel(logging.INFO)
 
-#log to sysout 
-#logger.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-
 #start time
 time_start = time.time()
 
