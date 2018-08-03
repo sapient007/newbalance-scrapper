@@ -108,12 +108,12 @@ def main():
             logger.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             
             slept = 0 
-            logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
+            logger.info("going to sleep... " + str(slept) + " secs have past" )
 
             while (slept < SLEEP_SEC):
                 slept += 1800
                 time.sleep(1800)
-                logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past" )
+                logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past " +  str(SLEEP_SEC-slept) + " seconds remain")
             
         except KeyboardInterrupt:
             break
