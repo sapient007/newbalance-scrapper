@@ -19,7 +19,19 @@ class ContextFilter(logging.Filter):
         record.hostname = ContextFilter.hostname
         return True
 
-syslog = SysLogHandler(address=('logs.papertrailapp.com', 15542))
+#define some deafult paramerters
+MODEL = os.getenv("MODEL", '860')
+SIZE = os.getenv("SIZE", '9.5')
+WIDTH = os.getenv("WIDTH", '2E')
+TARGET_PRICE = os.getenv("PRICE", 60)
+SLEEP_SEC = int(os.getenv("SLEEP_TIME_SEC", 43200)) #default to sleep for 12 hours
+EMAIL = os.getenv("EMAIL", 'what@ever.com')
+SMTP_USER = os.getenv("SMTP_USER") #no defaults are set for this 
+SMTP_PASS = os.getenv("SMTP_PASS") #no defaults are set for this 
+PAPER_TRAIL_EVENT = os.getenv("PAPER_TRAIL_EVENT", 11111)
+SLACK_WEBHOOK = os.getenv("SLACK_WEBHOOK", "https://hooks.slack.com/services/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")
+
+syslog = SysLogHandler(address=('logs.papertrailapp.com', PAPER_TRAIL_EVENT))
 syslog.addFilter(ContextFilter())
 
 format = '%(asctime)s %(hostname)s NB_Scraper: %(message)s'
@@ -35,19 +47,6 @@ logger.setLevel(logging.INFO)
 
 #start time
 time_start = time.time()
-
-#Slack Channel Webhook
-SLACK_WEBHOOK = "https://hooks.slack.com/services/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"
-
-#define some deafult paramerters
-MODEL = os.getenv("MODEL", '860')
-SIZE = os.getenv("SIZE", '9.5')
-WIDTH = os.getenv("WIDTH", '2E')
-TARGET_PRICE = os.getenv("PRICE", 60)
-SLEEP_SEC = int(os.getenv("SLEEP_TIME_SEC", 43200)) #default to sleep for 12 hours
-EMAIL = os.getenv("EMAIL", 'what@ever.com')
-SMTP_USER = os.getenv("SMTP_USER") #no defaults are set for this 
-SMTP_PASS = os.getenv("SMTP_PASS") #no defaults are set for this 
 
 # specify the url
 BASE_URL= 'https://www.joesnewbalanceoutlet.com/men/shoes/running/?Filters%5BSize%5D=' + SIZE + '&Filters%5BWidth%5D=' + WIDTH + '&Categories=men&Categories=shoes&Categories=running&PriceRange=&OnSale=&Icon=&Brand=0&PageSize=24&Page=1&Branded=False&ListType=Grid&Text=' + MODEL + '&Sorting=LowestPrice'
@@ -101,9 +100,13 @@ def main():
                 logger.info("lowest price is " + str(price) )
                 if price < TARGET_PRICE:
                     send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
+                #price is > than target
+                else:
+                    logger.info("something found. lowest price > target " + str(price) )
+                    send_to_slack("price at " + str(price)) 
             else:
+                logger.info("nothing found. lowest price is " + str(price) )
                 send_to_slack("nothing found")
-                logger.info("nothing found" )
             
             logger.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
             
@@ -113,7 +116,7 @@ def main():
             while (slept < SLEEP_SEC):
                 slept += 1800
                 time.sleep(1800)
-                logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past " +  str(SLEEP_SEC-slept) + " seconds remain")
+                logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past " +  str(SLEEP_SEC-slept) + " seconds remain for the next scan")
             
         except KeyboardInterrupt:
             break
