@@ -55,6 +55,9 @@ def parse_page_for_price(quote_page):
     soup = BeautifulSoup(page, 'html.parser')
     #scape the screen and find the lowest price posted
     # TODO: add a condition there if no results are found in the search
+    no_item = soup.find('div', attrs={'id': 'NoProductsFound'})
+    if no_item is not None:
+        return
     price_div = soup.find('div', attrs={'class': 'productPrice'})
     if price_div is not None:
         price = price_div.text.strip().replace("$", "")
@@ -96,13 +99,13 @@ def main():
             if price is not None:
                 # Check the page
                 if price <= TARGET_PRICE:
-                    send_to_slack("@mling Price Mark Found at " + str(price) + " with URL " + BASE_URL)
+                    send_to_slack("Price Mark Found at " + str(price) + " with URL " + BASE_URL)
                     #price is > than target
                 else:
-                    logger.info("lowest price > target " + str(price) )
+                    logger.info("lowest price (" + str(price) + ") > target ")
                     send_to_slack("price at " + str(price)) 
             else:
-                logger.info("nothing found. lowest price is " + str(price) )
+                logger.info("nothing found")
                 #send_to_slack("nothing found")
             
             logger.info("Going to sleep for " +  str(datetime.timedelta(seconds=SLEEP_SEC)) + " hours" )
@@ -111,8 +114,8 @@ def main():
             logger.info("going to sleep... " + str(slept) + " secs have past" )
 
             while (slept < SLEEP_SEC):
-                slept += 1800
-                time.sleep(1800)
+                slept += 3600
+                time.sleep(3600)
                 logger.info("sleeping ... still sleeping... " + str(slept) + " secs have past " +  str(SLEEP_SEC-slept) + " seconds remain for the next scan")
             
         except KeyboardInterrupt:
